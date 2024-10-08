@@ -1,22 +1,33 @@
 import express from "express";
 import {
+  login,
   userRegister,
+  addNewAdmin,
+  addNewStaff,
+  getAllStaffs,
+  getUserDetails,
+  logoutUser,
+  logoutAdmin,
+  logoutStaff
 } from "../controller/userController.js";
-// import {
-//   isAdminAuthenticated,
-//   isuserAuthenticated,
-// } from "../middlewares/auth.js";
+import {
+  isAdminAuthenticated,
+  isUserAuthenticated,
+  isStaffAuthenticated,
+} from "../middlewares/auth.js";
 
 const router = express.Router();
 
 router.post("/register", userRegister);
-// router.post("/login", login);
-// router.post("/admin/addnew", isAdminAuthenticated, addNewAdmin);
-// router.post("/doctor/addnew", isAdminAuthenticated, addNewDoctor);
-// router.get("/doctors", getAllDoctors);
-// router.get("/user/me", isuserAuthenticated, getUserDetails);
-// router.get("/admin/me", isAdminAuthenticated, getUserDetails);
-// router.get("/user/logout", isuserAuthenticated, logoutuser);
-// router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
+router.post("/login", login);
+router.post("/admin/addnew", isAdminAuthenticated, addNewAdmin);
+router.post("/staff/addnew", isAdminAuthenticated, addNewStaff);
+router.get("/staff", getAllStaffs);
+router.get("/user/me", isUserAuthenticated, getUserDetails);
+router.get("/admin/me", isAdminAuthenticated, getUserDetails);
+router.get("/staff/me", isStaffAuthenticated, getUserDetails);
+router.get("/user/logout", isUserAuthenticated, logoutUser);
+router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
+router.get("/staff/logout", isStaffAuthenticated, logoutStaff);
 
 export default router;
