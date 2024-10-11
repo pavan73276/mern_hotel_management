@@ -7,6 +7,9 @@ import fileUpload from "express-fileupload";
 import { errorMiddleware } from "./middlewares/error.js";
 import userRouter from "./router/userRouter.js";
 import roomRouter from "./router/roomRouter.js";
+import bookingRouter from "./router/bookingRouter.js";
+import currentStayRouter from "./router/currentStayRouter.js";
+
 
 const app = express();
 config({ path: "./config/config.env" });
@@ -32,6 +35,9 @@ app.use(
 
 app.use("/user", userRouter);
 app.use("/room", roomRouter);
+app.use("/booking", bookingRouter);
+app.use("/currentStay", currentStayRouter);
+
 
 dbConnection();
 app.use(errorMiddleware);

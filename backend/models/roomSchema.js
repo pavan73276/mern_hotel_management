@@ -16,6 +16,13 @@ const roomSchema = new mongoose.Schema({
     type: [Boolean], // Array of Booleans
     default: Array(30).fill(true), // Default to all days being available
   },
+  price: {
+    type: Number,
+    required: [true, "Room price is required!"],
+    default: function () {
+      return this.type === "Normal" ? 1000 : 2000; 
+    }
+  }
 });
 
 // Method to check availability
@@ -28,7 +35,24 @@ roomSchema.statics.checkAvailability = async function (indices, roomType) {
     return indices.every((index) => room.availability[index] === true);
   });
 
-  return availableRooms.map((room) => room.roomNo);
+  return availableRooms;
+};
+
+roomSchema.statics.updateAvailability = async function (indices, id) {
+
+  const room = await this.findById(id);
+
+  if (!room) {
+    throw new Error("Room not found", 400);
+  }
+
+  indices.forEach((index) => {
+    if (index >= 0 && index < room.availability.length) {
+      room.availability[index] = false; 
+    }
+  });
+
+  await room.save();
 };
 
 export const Room = mongoose.model("Room", roomSchema);
