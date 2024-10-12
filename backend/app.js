@@ -9,7 +9,7 @@ import userRouter from "./router/userRouter.js";
 import roomRouter from "./router/roomRouter.js";
 import bookingRouter from "./router/bookingRouter.js";
 import currentStayRouter from "./router/currentStayRouter.js";
-
+import { updateRoomAvailability } from "./AutoUpdators/roomAvailabilityUpdate.js";
 
 const app = express();
 config({ path: "./config/config.env" });
@@ -38,6 +38,7 @@ app.use("/room", roomRouter);
 app.use("/booking", bookingRouter);
 app.use("/currentStay", currentStayRouter);
 
+updateRoomAvailability();
 
 dbConnection();
 app.use(errorMiddleware);
