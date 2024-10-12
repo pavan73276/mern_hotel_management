@@ -20,6 +20,4 @@ const currentStaySchema = new mongoose.Schema({
   }
 });
 
-
-
 export const currentStay = mongoose.model("currentStay", currentStaySchema);

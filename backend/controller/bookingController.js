@@ -15,12 +15,13 @@ export const bookRooms = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Please provide a valid array of dates!", 400));
   }
 
-  const today = moment().startOf('day');
+  const today = new Date();
+  const dateOnly = today.toLocaleDateString('en-CA');
 
   const indices = []; 
 
   for (const date of dates) {
-    const dayDifference = moment(date).startOf('day').diff(today, 'days');
+    const dayDifference = moment(date).startOf('day').diff(dateOnly, 'days');
     if (dayDifference >= 0 && dayDifference < 30) {
       indices.push(dayDifference); 
     }
@@ -45,7 +46,7 @@ export const bookRooms = catchAsyncErrors(async (req, res, next) => {
   }
 
   const roomid = availableRooms[0][1]._id;
-
+  
   const newBooking = await Booking.create({
     userid: id,
     roomid,
@@ -53,7 +54,7 @@ export const bookRooms = catchAsyncErrors(async (req, res, next) => {
     bookingDates: dates
   });
 
-  Room.updateAvailability(indices, roomid);
+  Room.updateAvailabilityBooked(indices, roomid);
   
   res.status(201).json({
     success: true,

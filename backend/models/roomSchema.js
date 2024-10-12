@@ -38,7 +38,7 @@ roomSchema.statics.checkAvailability = async function (indices, roomType) {
   return availableRooms;
 };
 
-roomSchema.statics.updateAvailability = async function (indices, id) {
+roomSchema.statics.updateAvailabilityBooked = async function (indices, id) {
 
   const room = await this.findById(id);
 
@@ -49,6 +49,23 @@ roomSchema.statics.updateAvailability = async function (indices, id) {
   indices.forEach((index) => {
     if (index >= 0 && index < room.availability.length) {
       room.availability[index] = false; 
+    }
+  });
+
+  await room.save();
+};
+
+roomSchema.statics.updateAvailabilityBookingEnds = async function (indices, id) {
+
+  const room = await this.findById(id);
+
+  if (!room) {
+    throw new Error("Room not found", 400);
+  }
+
+  indices.forEach((index) => {
+    if (index >= 0 && index < room.availability.length) {
+      room.availability[index] = true; 
     }
   });
 

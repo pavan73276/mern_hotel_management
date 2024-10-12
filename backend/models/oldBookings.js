@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const bookingSchema = new mongoose.Schema({
+const oldBookingSchema = new mongoose.Schema({
   userid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -25,22 +25,4 @@ const bookingSchema = new mongoose.Schema({
   }
 });
 
-bookingSchema.statics.searchBooking = async function (roomid, date) {
- 
-  if(!date){
-    throw new Error("Date is required.", 400);
-  }
-  if(!roomid){
-    throw new Error("Roomid is required.", 400);
-  }
-
-  const booking = await this.findOne({
-    roomid: roomid,  
-    bookingDates: { $elemMatch: { $eq: date } }  
-  });
-
-  return booking; 
-
-};
-
-export const Booking = mongoose.model("Booking", bookingSchema);
+export const oldBooking = mongoose.model("oldBooking", oldBookingSchema);
