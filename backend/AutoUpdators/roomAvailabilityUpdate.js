@@ -25,17 +25,3 @@ export const updateRoomAvailability = () => {
     }
   });
 };
-
-export const updateCurrentStay = () => {
-  cron.schedule("*/10 * * * *", async () => {
-    try {
-
-      
-
-      console.log("Current Stay updated successfully.");
-    } catch (error) {
-      console.error("Error in autoUpdator updating currentStay", error);
-      return next(console.log(error || "Some error in cron"));
-    }
-  });
-};

@@ -76,7 +76,7 @@ export const filter = catchAsyncErrors(async (req, res, next) => {
       message: "No current stays found"
     });
   }
-  
+  console.log(bookingIds);
   let query = {};
   let conditions = [];
   
