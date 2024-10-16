@@ -30,7 +30,7 @@ const Navbar = () => {
                 HOME
               </Link>
               <Link
-                to={"/jobs"}
+                to={"/booking"}
                 className="text-lg text-gray-700 hover:text-blue-600"
                 onClick={() => setShow(false)}
               >

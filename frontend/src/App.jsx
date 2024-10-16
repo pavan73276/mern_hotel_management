@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { getUser } from "./store/slices/userSlice";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import Booking from "./pages/Booking";
 
 const App = () => {
   // const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/booking" element={<Booking />} />
           {/* <Route path="/jobs" element={<Jobs />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/post/application/:jobId" element={<PostApplication />}/>

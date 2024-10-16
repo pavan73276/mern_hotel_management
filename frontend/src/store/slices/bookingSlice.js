@@ -59,7 +59,7 @@ export const getAvailbility = (data) => async (dispatch) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-
+    console.log(response)
     dispatch(bookingSlice.actions.availabilitySuccess(response.data));
     dispatch(bookingSlice.actions.clearAllErrors());
   } catch (error) {

@@ -12,6 +12,6 @@ const router = express.Router();
 router.get("/getallrooms", isAdminAuthenticated, getAllRooms);
 router.post("/addRoom", isAdminAuthenticated, addNewRoom);
 router.post("/deleteRoom", isAdminAuthenticated, DeleteRoom);
-router.get("/checkAvail", checkAvailbility);
+router.post("/checkAvail", checkAvailbility);
 
 export default router;
