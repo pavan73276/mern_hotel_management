@@ -9,8 +9,8 @@ export default function Profile() {
       <div className="mt-20">
         <h1 className="text-3xl font-bold mb-6">Current Bookings</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentBooking.length > 0 ? (
-            currentBooking.map((booking, index) => (
+          {currentBookings.length > 0 ? (
+            currentBookings.map((booking, index) => (
               <div
                 key={index}
                 className="p-4 bg-white shadow-lg rounded-lg border border-gray-200"
