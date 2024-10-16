@@ -2,6 +2,7 @@ import moment from 'moment';
 import { Room } from "../models/roomSchema.js";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { Booking } from "../models/bookingSchema.js";
+import { oldBooking } from "../models/oldBookingSchema.js";
 import ErrorHandler from "../middlewares/error.js";
 
 export const bookRooms = catchAsyncErrors(async (req, res, next) => {
@@ -79,7 +80,7 @@ export const getMyBookings = catchAsyncErrors(async (req, res, next) => {
     id
   } = req.user;
   
-  const bookings = await Booking.find({userid : id});
+  const bookings = await oldBooking.find({userid : id});
 
   res.status(201).json({
     success: true,
@@ -88,6 +89,24 @@ export const getMyBookings = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+export const getMyCurrentBookings = catchAsyncErrors(async (req, res, next) => {
+  const {
+    id
+  } = req.user;
+  
+  const today = new Date().toISOString().split('T')[0]; // Get today's date in yyyy-mm-dd format
 
+  const bookings = await Booking.find({
+    userid: id,
+    bookingDates: {
+      $elemMatch: { $gte: today }  // Find bookings where any date in the array is >= today
+    }
+  });
 
+  res.status(201).json({
+    success: true,
+    message: "All My Bookings!",
+    currentBookings : bookings
+  });
+});
 
