@@ -10,13 +10,21 @@ import { getUser } from "./store/slices/userSlice";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import Booking from "./pages/Booking";
+import Login from './pages/login'
+import Signup from "./pages/signup";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./pages/Profile"
+import MyAllBookings from "./pages/MyAllBookings";
+import CurrentBooking from "./pages/CurrentBooking";
+
 
 const App = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(getUser());
-  // }, []);
+  useEffect(() => {
+    dispatch(getUser());
+  }, []);
 
 
   return (
@@ -25,13 +33,31 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/booking" element={<Booking />} />
-          {/* <Route path="/jobs" element={<Jobs />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/post/application/:jobId" element={<PostApplication />}/>
-          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} /> */}
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/booking" element={<Booking />} />
+
+          {/* Protected Dashboard Routes */}
+          <Route
+            path="/dashboard/*"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="profile" element={<Profile/>} />
+            <Route path="currentbooking" element={<CurrentBooking />} />
+            <Route path="myallbooking" element={<MyAllBookings/>} />
+            {/* <Route path="changepassword" element={<ChangePassword/>} /> */}
+            {/* Redirect to profile by default */}
+            <Route path="" element={<Profile />} />
+          </Route>
+
+          {/* Catch-All Route for 404 */}
+          {/* <Routes path="*" element={<NotFound />} /> */}
+
+
         </Routes>
         {/* <Footer /> */}
         <ToastContainer position="top-right" theme="dark" />

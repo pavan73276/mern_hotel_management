@@ -6,6 +6,7 @@ const bookingSlice = createSlice({
   initialState: {
     loading: false,
     allAvailability: [],
+    currentBookings: [],
     isAvailable: 0,
     error: null,
     message: null,
@@ -42,6 +43,21 @@ const bookingSlice = createSlice({
       state.error = action.payload;
       state.message = null;
     },
+    currentBookingsRequest(state, action) {
+      state.loading = true;
+      state.error = null;
+      state.message = null;
+    },
+    currentBookingsSuccess(state, action) {
+      state.loading = false;
+      state.currentBookings = action.payload.currentBookings;
+      state.error = null;
+    },
+    currentBookingsFailed(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+      state.message = null;
+    },
     clearAllErrors(state, action) {
       state.error = null;
     },
@@ -65,6 +81,26 @@ export const getAvailbility = (data) => async (dispatch) => {
   } catch (error) {
     dispatch(
       bookingSlice.actions.availabilityFailed(error.response.data.message)
+    );
+  }
+};
+
+export const getCurrentBookings = () => async (dispatch) => {
+  dispatch(bookingSlice.actions.currentBookingsRequest());
+  try {
+    const response = await axios.get(
+      "http://localhost:4000/booking/currentBookings",
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    console.log(response)
+    dispatch(bookingSlice.actions.currentBookingsSuccess(response.data));
+    dispatch(bookingSlice.actions.clearAllErrors());
+  } catch (error) {
+    dispatch(
+      bookingSlice.actions.currentBookingsFailed(error.response.data.message)
     );
   }
 };

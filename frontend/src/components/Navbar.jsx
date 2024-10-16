@@ -1,17 +1,46 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { FaUserCircle } from "react-icons/fa";
+import { MdLogout, MdPerson } from "react-icons/md";
+import { logout } from "../store/slices/userSlice"; // Ensure you have a logout action
 
 const Navbar = () => {
-  const [show, setShow] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const [show, setShow] = useState(false); // Mobile menu visibility
+  const [dropdown, setDropdown] = useState(false); // dashboard dropdown visibility
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null); // Reference to the dropdown for click outside
+
+  // Handle logout
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/"); // Redirect to home after logout
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
       <nav className="w-full fixed top-0 z-50 bg-white shadow-lg">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          {/* Left Section - Logo and Links */}
+          {/* Left Section - Logo and Main Navigation Links */}
           <div className="flex items-center space-x-8">
             {/* Logo Section */}
             <div className="logo">
@@ -20,7 +49,7 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* Navigation Links */}
+            {/* Main Navigation Links */}
             <div className={`hidden md:flex space-x-8`}>
               <Link
                 to={"/"}
@@ -36,35 +65,60 @@ const Navbar = () => {
               >
                 BOOKINGS
               </Link>
-              {isAuthenticated ? (
-                <Link
-                  to={"/dashboard"}
-                  className="text-lg text-gray-700 hover:text-blue-600"
-                  onClick={() => setShow(false)}
-                >
-                  DASHBOARD
-                </Link>
-              ) : (
-                <Link
-                  to={"/login"}
-                  className="text-lg text-gray-700 hover:text-blue-600"
-                  onClick={() => setShow(false)}
-                >
-                  LOGIN
-                </Link>
-              )}
+              <Link
+                to={"/booking"}
+                className="text-lg text-gray-700 hover:text-blue-600"
+                onClick={() => setShow(false)}
+              >
+                ABOUT
+              </Link>
+              {/* Add more main links here if needed */}
             </div>
           </div>
 
-          {/* Right Section - Login/SignUp Buttons */}
+
+          {/* Right Section - Profile Dropdown or Login/SignUp Buttons */}
           <div className="hidden md:flex space-x-4">
             {isAuthenticated ? (
-              <Link
-                to={"/dashboard"}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Dashboard
-              </Link>
+              <div className="relative" ref={dropdownRef}>
+                {/* Profile Avatar */}
+                <button
+                  onClick={() => setDropdown(!dropdown)}
+                  className="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none"
+                  aria-label="User menu"
+                >
+                  {user && user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt="profile"
+                      className="w-10 h-10 rounded-full"
+                    />
+                  ) : (
+                    <FaUserCircle className="text-2xl text-gray-700" />
+                  )}
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdown && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+                    <Link
+                      to={"/dashboard"}
+                      className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      onClick={() => setDropdown(false)}
+                    >
+                      <MdPerson className="mr-2" />
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                    >
+                      <MdLogout className="mr-2" />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <>
                 <Link
@@ -105,7 +159,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  to={"/jobs"}
+                  to={"/booking"}
                   className="text-lg text-gray-700 hover:text-blue-600"
                   onClick={() => setShow(false)}
                 >
@@ -113,15 +167,30 @@ const Navbar = () => {
                 </Link>
               </li>
               {isAuthenticated ? (
-                <li>
-                  <Link
-                    to={"/dashboard"}
-                    className="text-lg text-gray-700 hover:text-blue-600"
-                    onClick={() => setShow(false)}
-                  >
-                    DASHBOARD
-                  </Link>
-                </li>
+                <>
+                  <li>
+                    <Link
+                      to={"/dashboard"}
+                      className="flex items-center text-lg text-gray-700 hover:text-blue-600"
+                      onClick={() => setShow(false)}
+                    >
+                      <MdPerson className="mr-2" />
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setShow(false);
+                      }}
+                      className="flex items-center text-lg text-gray-700 hover:text-blue-600"
+                    >
+                      <MdLogout className="mr-2" />
+                      Logout
+                    </button>
+                  </li>
+                </>
               ) : (
                 <>
                   <li>
