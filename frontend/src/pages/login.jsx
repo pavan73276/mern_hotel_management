@@ -31,6 +31,7 @@ export default function Login() {
     // Handle Side Effects
     useEffect(() => {
       if (error) {
+        console.log(error);
         toast.error(error); // Display Error Message
         dispatch(clearAllUserErrors());
       }

@@ -109,3 +109,43 @@ export const checkAvailbility = catchAsyncErrors(async (req, res, next) => {
     count: Object.keys(rooms).length,
   });
 });
+
+export const getAllAvailability = catchAsyncErrors(async (req, res, next) => {
+  const { roomType } = req.body;
+  
+  if (!roomType) {
+    return next(
+      new ErrorHandler("Please provide a valid roomType!", 400)
+    );
+  }
+
+  // Find all rooms of the specified roomType
+  const rooms = await Room.find({ roomType });
+
+  if (!rooms || rooms.length === 0) {
+    return next(
+      new ErrorHandler("No rooms found for the provided roomType!", 404)
+    );
+  }
+
+  // Initialize an array to store availability count for the next 30 days
+  const availabilityCount = new Array(30).fill(0);
+
+  // Loop through all rooms and their availability array
+  rooms.forEach((room) => {
+    room.availability.forEach((isAvailable, index) => {
+      // Increment the count at the index if the room is available on that day
+      if (isAvailable) {
+        availabilityCount[index]++;
+      }
+    });
+  });
+
+  // Return the availability count for the next 30 days
+  res.status(200).json({
+    success: true,
+    allAvailability: availabilityCount,  // Array of 30 elements representing available rooms per day
+  });
+});
+
+
