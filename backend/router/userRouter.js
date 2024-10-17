@@ -2,6 +2,9 @@ import express from "express";
 import {
   login,
   userRegister,
+  
+  sendotp,
+
   addNewAdmin,
   addNewStaff,
   getAllStaffs,
@@ -16,10 +19,15 @@ import {
   isStaffAuthenticated,
 } from "../middlewares/auth.js";
 
+
 const router = express.Router();
 
 router.post("/register", userRegister);
 router.post("/login", login);
+
+router.post("/sendotp", sendotp);
+
+
 router.post("/admin/addnew", isAdminAuthenticated, addNewAdmin);
 router.post("/staff/addnew", isAdminAuthenticated, addNewStaff);
 router.get("/staff", getAllStaffs);

@@ -17,7 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile"
 import MyAllBookings from "./pages/MyAllBookings";
 import CurrentBooking from "./pages/CurrentBooking";
-
+import ForgotPassword from "./pages/ForgotPassword";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -58,9 +58,11 @@ const App = () => {
           {/* <Routes path="*" element={<NotFound />} /> */}
 
 
+          <Route path="/forgotPassword" element={<ForgotPassword/>} />
+ 
         </Routes>
         {/* <Footer /> */}
-        <ToastContainer position="top-right" theme="dark" />
+        <ToastContainer position="top-center" theme="dark" />
       </Router>
     </div>
   );
