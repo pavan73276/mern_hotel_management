@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { clearAllUserErrors, login, register } from "../store/slices/userSlice";
+import { clearAllUserErrors, login } from "../store/slices/userSlice";
 import { toast } from "react-toastify";
 
 export default function Login() {
@@ -12,7 +12,7 @@ export default function Login() {
     role: 'User'
   });
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-  const { loading, isAuthenticated, error, message } = useSelector(
+  const { loading, isAuthenticated, error } = useSelector(
     (state) => state.user
   );
 
@@ -28,21 +28,19 @@ export default function Login() {
     dispatch(login(formData));
   };
 
-    // Handle Side Effects
-    useEffect(() => {
-      if (error) {
-        console.log(error);
-        toast.error(error); // Display Error Message
-        dispatch(clearAllUserErrors());
-      }
-      if (isAuthenticated) {
-        toast.success("login successfully");
-        navigateTo("/"); // Redirect to Home on Successful Registration
-      }
-    }, [dispatch, error, loading, isAuthenticated, message, navigateTo]);
+  // Handle Side Effects
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error); // Display Error Message
+      dispatch(clearAllUserErrors());
+    }
+    if (isAuthenticated) {
+      toast.success("Login successfully");
+      navigateTo("/"); // Redirect to Home on Successful Login
+    }
+  }, [dispatch, error, loading, isAuthenticated, navigateTo]);
 
-
-    
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -87,10 +85,15 @@ export default function Login() {
           Log In
         </button>
 
-        {/* Signup Link */}
-        <p className="text-center mt-4 text-gray-500">
-          New here? <a href="/signup" className="text-blue-500 hover:underline">Sign Up</a>
-        </p>
+        {/* Forgot Password and Signup in same line */}
+        <div className="flex justify-between items-center mt-4 text-gray-500">
+          <Link to="/forgotPassword" className="text-blue-500 hover:underline">
+            Forgot Password?
+          </Link>
+          <p>
+            New here? <Link to="/signup" className="text-blue-500 hover:underline">Sign Up</Link>
+          </p>
+        </div>
       </form>
     </div>
   );
