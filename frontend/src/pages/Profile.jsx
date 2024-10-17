@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from "react-toastify";
+import { updatePassword } from '../store/slices/userSlice';
+import { FaEye, FaEyeSlash, FaEdit } from 'react-icons/fa'; // Import eye and edit icons
+
+const defaultAvatar = ''; // Using empty string for no image case
 
 export default function Profile() {
   const { user } = useSelector((state) => state.user);
-  const [isEditing, setIsEditing] = useState(false);
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
-  const [dob, setDob] = useState(user.dob);
-  const [gender, setGender] = useState(user.gender);
+  const dispatch = useDispatch();
+
   const [profilePic, setProfilePic] = useState(null);
-  const [previewPic, setPreviewPic] = useState(user.profilePic || '');
+  const [previewPic, setPreviewPic] = useState(user.profilePic || defaultAvatar);
 
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-  };
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-  const handleSave = () => {
-    // Here you would typically dispatch an action to save the updated details
-    console.log('Updated Details:', { firstName, lastName, dob, gender, profilePic });
-    setIsEditing(false);
-  };
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
@@ -33,125 +34,166 @@ export default function Profile() {
     }
   };
 
+  const handlePasswordUpdate = (e) => {
+    e.preventDefault();
+
+    if (newPassword !== confirmNewPassword) {
+      toast.error("New passwords don't match");
+      return;
+    }
+
+    dispatch(updatePassword({ currentPassword, newPassword }));
+
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
+    setShowPasswordForm(!showPasswordForm);
+    toast.success("Password Updated");
+  };
+
+  const togglePasswordForm = () => {
+    setShowPasswordForm(!showPasswordForm);
+  };
+
   return (
-    <div className="container mx-auto px-3 mt-20"> {/* Added mt-24 for margin top */}
-      <h2 className="text-3xl font-bold mb-6">Profile</h2>
-
-      <div className="bg-white shadow-md rounded-lg p-6 flex flex-col md:flex-row items-start">
-        {/* Profile Picture Section */}
-        <div className="relative mb-4 md:mb-0 md:mr-6">
-          <img
-            src={previewPic || 'path/to/default/profile-pic.png'} // Path to your default image
-            alt="Profile"
-            className="w-32 h-32 rounded-full border-4 border-blue-600 object-cover"
-          />
-          <label className="absolute bottom-0 right-0 bg-blue-600 text-white px-2 py-1 rounded-full cursor-pointer hover:bg-blue-700">
-            Edit
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleProfilePicChange}
-              className="hidden"
-            />
-          </label>
+    <div className="min-h-screen bg-gradient-to-r from-gray-100 via-white to-gray-200 flex flex-col items-center py-20">
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-12 space-y-10 relative">
+        {/* Profile Header Section */}
+        <div className="bg-gradient-to-r from-orange-400 to-yellow-500 p-8 rounded-lg text-white text-center relative">
+          {/* Profile Picture */}
+          <div className="relative mx-auto w-32 h-32">
+            <div
+              className={`w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover absolute inset-0 ${
+                !profilePic ? 'bg-light-blue-500' : ''
+              }`}
+              style={{
+                backgroundImage: `url(${previewPic || defaultAvatar})`,
+                backgroundSize: 'cover',
+                top: '50%', // Position it half in header and half out
+                transform: 'translateY(-50%)',
+              }}
+            ></div>
+            {/* Edit option on hover */}
+            <label htmlFor="profilePicUpload" className="absolute inset-0 flex items-center justify-center cursor-pointer opacity-0 hover:opacity-100 bg-black bg-opacity-50 rounded-full">
+              <FaEdit className="text-white text-2xl" />
+              <input
+                id="profilePicUpload"
+                type="file"
+                className="hidden"
+                onChange={handleProfilePicChange}
+              />
+            </label>
+          </div>
+          <div className="mt-16 text-center">
+            <h2 className="text-4xl font-bold font-serif">{user.firstName.toUpperCase()}</h2>
+          </div>
         </div>
 
-        {/* User Details Section */}
-        <div className="flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-20 space-y-8">
+          {/* Profile Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <label className="block text-lg font-semibold">First Name:</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-600"
-                />
-              ) : (
-                <span className="block mt-1">{user.firstName}</span>
-              )}
+              <label className="block text-xl font-semibold text-gray-700 font-sans">First Name:</label>
+              <span className="block mt-1 text-gray-900 font-serif text-lg">{user.firstName}</span>
             </div>
-
             <div>
-              <label className="block text-lg font-semibold">Last Name:</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-600"
-                />
-              ) : (
-                <span className="block mt-1">{user.lastName}</span>
-              )}
+              <label className="block text-xl font-semibold text-gray-700 font-sans">Last Name:</label>
+              <span className="block mt-1 text-gray-900 font-serif text-lg">{user.lastName}</span>
             </div>
           </div>
 
-          <div className="mt-4">
-            <label className="block text-lg font-semibold">Date of Birth:</label>
-            {isEditing ? (
-              <div className="flex items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-xl font-semibold text-gray-700 font-sans">Date of Birth:</label>
+              <span className="block mt-1 text-gray-900 font-serif text-lg">{user.dob}</span>
+            </div>
+            <div>
+              <label className="block text-xl font-semibold text-gray-700 font-sans">Gender:</label>
+              <span className="block mt-1 text-gray-900 font-serif text-lg">{user.gender}</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xl font-semibold text-gray-700 font-sans">Email:</label>
+            <span className="block mt-1 text-gray-900 font-serif text-lg">{user.email}</span>
+          </div>
+        </div>
+
+        {/* Button to toggle the password form */}
+        <div className="text-center">
+          <button
+            onClick={togglePasswordForm}
+            className="bg-indigo-600 text-white font-semibold text-lg px-8 py-3 rounded-lg hover:bg-indigo-700 transition"
+          >
+            Update Password
+          </button>
+        </div>
+
+        {/* Password Update Section */}
+        {showPasswordForm && (
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 shadow-lg rounded-lg p-8 w-full md:w-2/3 mx-auto">
+            <h3 className="text-3xl font-bold mb-6 text-center text-gray-800 font-serif">Update Password</h3>
+            <form onSubmit={handlePasswordUpdate}>
+              <div className="mb-6 relative">
+                <label className="block text-lg font-medium text-gray-700 font-sans">Current Password:</label>
                 <input
-                  type="date"
-                  value={dob}
-                  onChange={(e) => setDob(e.target.value)}
-                  className="mt-1 block w-100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-600"
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-3 bg-white text-gray-900 shadow focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  required
                 />
+                <span
+                  className="absolute right-3 top-3 cursor-pointer text-gray-600"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                >
+                  {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
               </div>
-            ) : (
-              <span className="block mt-1">{user.dob}</span>
-            )}
-          </div>
 
-          <div className="mt-4">
-            <label className="block text-lg font-semibold">Gender:</label>
-            {isEditing ? (
-              <select
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-                className="mt-1 block w-f100 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-600"
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            ) : (
-              <span className="block mt-1">{user.gender}</span>
-            )}
-          </div>
-
-          <div className="mt-4">
-            <label className="block text-lg font-semibold">Email:</label>
-            <span className="block mt-1">{user.email}</span>
-          </div>
-
-          <div className="flex space-x-4 mt-6">
-            {isEditing ? (
-              <>
-                <button
-                  onClick={handleSave}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              <div className="mb-6 relative">
+                <label className="block text-lg font-medium text-gray-700 font-sans">New Password:</label>
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-3 bg-white text-gray-900 shadow focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  required
+                />
+                <span
+                  className="absolute right-3 top-3 cursor-pointer text-gray-600"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
                 >
-                  Save
-                </button>
-                <button
-                  onClick={handleEditToggle}
-                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400"
+                  {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+
+              <div className="mb-6 relative">
+                <label className="block text-lg font-medium text-gray-700 font-sans">Confirm New Password:</label>
+                <input
+                  type={showConfirmNewPassword ? 'text' : 'password'}
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-3 bg-white text-gray-900 shadow focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  required
+                />
+                <span
+                  className="absolute right-3 top-3 cursor-pointer text-gray-600"
+                  onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
                 >
-                  Cancel
-                </button>
-              </>
-            ) : (
+                  {showConfirmNewPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+
               <button
-                onClick={handleEditToggle}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                type="submit"
+                className="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-indigo-700 w-full transition"
               >
-                Edit
+                Update Password
               </button>
-            )}
+            </form>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

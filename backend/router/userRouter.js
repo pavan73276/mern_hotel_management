@@ -8,7 +8,8 @@ import {
   getUserDetails,
   logoutUser,
   logoutAdmin,
-  logoutStaff
+  logoutStaff,
+  updatePassword
 } from "../controller/userController.js";
 import {
   isAdminAuthenticated,
@@ -29,5 +30,7 @@ router.get("/staff/me", isStaffAuthenticated, getUserDetails);
 router.get("/user/logout", isUserAuthenticated, logoutUser);
 router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
 router.get("/staff/logout", isStaffAuthenticated, logoutStaff);
+router.put("/update/password", isUserAuthenticated, updatePassword);
+
 
 export default router;
