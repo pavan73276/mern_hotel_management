@@ -9,7 +9,7 @@ export default function MyAllBookings() {
 
   useEffect(() => {
     dispatch(showMyAllBookings());
-  }, []);
+  }, [dispatch]);
 
  
   return (

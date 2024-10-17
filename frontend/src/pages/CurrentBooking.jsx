@@ -1,9 +1,15 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, {useEffect} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentBookings } from "../store/slices/bookingSlice";
 
-export default function Profile() {
+export default function CurrentBooking() {
+  const dispatch = useDispatch();
   const { currentBookings } = useSelector((state) => state.booking);
   
+  useEffect(() => {
+    dispatch(getCurrentBookings());
+  }, [dispatch]);
+
   return (
     <>
       <div className="mt-20">

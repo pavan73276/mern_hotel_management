@@ -111,7 +111,6 @@ export const showMyAllBookings = () => async (dispatch) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-    console.log(response)
     dispatch(bookingSlice.actions.allMyBookingsSuccess(response.data));
     dispatch(bookingSlice.actions.clearAllErrors());
   } catch (error) {
@@ -131,10 +130,11 @@ export const getCurrentBookings = () => async (dispatch) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-    console.log(response)
     dispatch(bookingSlice.actions.currentBookingsSuccess(response.data));
     dispatch(bookingSlice.actions.clearAllErrors());
   } catch (error) {
+    
+    console.log(error);
     dispatch(
       bookingSlice.actions.currentBookingsFailed(error.response.data.message)
     );

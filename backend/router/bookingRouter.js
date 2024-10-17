@@ -8,6 +8,6 @@ const router = express.Router();
 router.post("/bookRooms", isUserAuthenticated, bookRooms);
 router.get("/getAllBookings", isAdminAuthenticated, getAllBookings);
 router.get("/getMyBookings", isUserAuthenticated, getMyBookings);
-router.get("/getMyCurrentBookings", isUserAuthenticated, getMyCurrentBookings);
+router.get("/currentBookings", isUserAuthenticated, getMyCurrentBookings);
 
 export default router;
