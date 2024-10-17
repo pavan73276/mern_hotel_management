@@ -41,6 +41,8 @@ export default function Login() {
       }
     }, [dispatch, error, loading, isAuthenticated, message, navigateTo]);
 
+
+    
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };

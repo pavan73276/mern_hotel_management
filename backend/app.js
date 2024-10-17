@@ -11,6 +11,7 @@ import bookingRouter from "./router/bookingRouter.js";
 import currentStayRouter from "./router/currentStayRouter.js";
 import { updateRoomAvailability } from "./AutoUpdators/roomAvailabilityUpdate.js";
 import { updateCurrentStay, updateCurrentStay2 } from "./AutoUpdators/currentStayUpdator.js";
+import {cloudinaryConnect} from "./config/cloudinary.js";
 
 const app = express();
 config({ path: "./config/config.env" });
@@ -45,6 +46,8 @@ updateCurrentStay2();
 
 
 dbConnection();
+cloudinaryConnect();
+
 app.use(errorMiddleware);
 
 export default app;
