@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { getAvailbility } from "../store/slices/bookingSlice";
 
-const Calendar = ({ selectedRoom }) => {
+const Calendar = ({ onDatesSelected }) => {
   const availability = [
     1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1,
     1, 1, 1, 1, 1, 0,
@@ -40,12 +38,11 @@ const Calendar = ({ selectedRoom }) => {
   };
 
   const handleFindRoomClick = () => {
-    const dates = selectedDates
-      .map((date) => new Date(date).toISOString().split("T")[0])
-      .sort();
-    const roomType = selectedRoom;
-    dispatch(getAvailbility({ dates, roomType }));
-    setAvailabilityChecked(true); // Set flag to true to show availability result
+    const dates = selectedDates.map((date) =>
+      new Date(date).toISOString().split("T")[0]
+    );
+    setAvailabilityChecked(true);
+    onDatesSelected(dates); // Pass dates to parent
   };
 
   return (
