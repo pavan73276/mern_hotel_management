@@ -4,6 +4,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { Booking } from "../models/bookingSchema.js";
 import { oldBooking } from "../models/oldBookingSchema.js";
 import ErrorHandler from "../middlewares/error.js";
+import mongoose from "mongoose";
 
 export const bookRooms = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.user;
@@ -86,12 +87,12 @@ export const getMyCurrentBookings = catchAsyncErrors(async (req, res, next) => {
   const bookings = await Booking.aggregate([
     {
       // Match bookings by userId
-      $match: { userid: id },
+      $match: { userid: mongoose.Types.ObjectId.createFromHexString(id)},
     },
     {
       // Perform a lookup to join the Room schema
       $lookup: {
-        from: "Room", // The name of the Room collection
+        from: "rooms", // The name of the Room collection
         localField: "roomid",
         foreignField: "_id",
         as: "roomDetails",
@@ -111,7 +112,7 @@ export const getMyCurrentBookings = catchAsyncErrors(async (req, res, next) => {
       },
     },
   ]);
-
+  
   if (!bookings || bookings.length === 0) {
     return next(
       new ErrorHandler("No bookings found for the provided userId!", 404)
@@ -135,12 +136,12 @@ export const getMyBookings = catchAsyncErrors(async (req, res, next) => {
   const bookings = await oldBooking.aggregate([
     {
       // Match bookings by userId
-      $match: { userid: id },
+      $match: { userid: mongoose.Types.ObjectId.createFromHexString(id) },
     },
     {
       // Perform a lookup to join the Room schema
       $lookup: {
-        from: "Room", // The name of the Room collection
+        from: "rooms", // The name of the Room collection
         localField: "roomid",
         foreignField: "_id",
         as: "roomDetails",

@@ -51,7 +51,7 @@ const bookingSlice = createSlice({
     },
     currentBookingsSuccess(state, action) {
       state.loading = false;
-      state.currentBookings = action.payload.currentBookings;
+      state.currentBookings = action.payload.bookings;
       state.error = null;
     },
     currentBookingsFailed(state, action) {
@@ -130,6 +130,8 @@ export const getCurrentBookings = () => async (dispatch) => {
         headers: { "Content-Type": "application/json" },
       }
     );
+    console.log(response);
+
     dispatch(bookingSlice.actions.currentBookingsSuccess(response.data));
     dispatch(bookingSlice.actions.clearAllErrors());
   } catch (error) {
