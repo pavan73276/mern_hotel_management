@@ -2,9 +2,8 @@ import express from "express";
 import {
   login,
   userRegister,
-  
   sendotp,
-
+  resetPassword,
   addNewAdmin,
   addNewStaff,
   getAllStaffs,
@@ -12,7 +11,8 @@ import {
   logoutUser,
   logoutAdmin,
   logoutStaff,
-  updatePassword
+  updatePassword,
+  resetPassword
 } from "../controller/userController.js";
 import {
   isAdminAuthenticated,
@@ -27,6 +27,7 @@ router.post("/register", userRegister);
 router.post("/login", login);
 
 router.post("/sendotp", sendotp);
+router.post("/resetPassword", resetPassword);
 
 
 router.post("/admin/addnew", isAdminAuthenticated, addNewAdmin);
@@ -39,6 +40,7 @@ router.get("/user/logout", isUserAuthenticated, logoutUser);
 router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
 router.get("/staff/logout", isStaffAuthenticated, logoutStaff);
 router.put("/update/password", isUserAuthenticated, updatePassword);
+router.put("/resetPass", resetPassword);
 
 
 export default router;

@@ -84,7 +84,7 @@ export const getAvailbility = (data) => async (dispatch) => {
   dispatch(bookingSlice.actions.availabilityRequest());
   try {
     const response = await axios.post(
-      "http://localhost:4000/room/checkAvail",
+      "http://1227.0.0.1:4000/room/checkAvail",
       data,
       {
         withCredentials: true,
@@ -105,7 +105,7 @@ export const showMyAllBookings = () => async (dispatch) => {
   dispatch(bookingSlice.actions.allMyBookingsRequest());
   try {
     const response = await axios.get(
-      "http://localhost:4000/booking/getMyBookings",
+      "http://1227.0.0.1:4000/booking/getMyBookings",
       {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
@@ -124,7 +124,7 @@ export const getCurrentBookings = () => async (dispatch) => {
   dispatch(bookingSlice.actions.currentBookingsRequest());
   try {
     const response = await axios.get(
-      "http://localhost:4000/booking/currentBookings",
+      "http://1227.0.0.1:4000/booking/currentBookings",
       {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
