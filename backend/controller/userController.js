@@ -46,6 +46,7 @@ export const userRegister = catchAsyncErrors(async (req, res, next) => {
 
 export const login = catchAsyncErrors(async (req, res, next) => {
   const { email, password, role } = req.body;
+  
   if (!email || !password || !role) {
     return next(new ErrorHandler("Please Fill Full Form!", 400));
   }

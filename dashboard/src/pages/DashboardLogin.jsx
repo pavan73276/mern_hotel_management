@@ -1,13 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { clearAllUserErrors, staffLogin } from "../store/slices/staffSlice.js"; 
+import { toast } from "react-toastify";
+import { loginAdmin } from '../store/slices/adminSlice.js';
+
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { loading, isAuthenticated, error } = useSelector((state) => state.admin); // Use admin slice here
+
+  const dispatch = useDispatch();
+  const navigateTo = useNavigate();
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePassChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleAdminlogin = (e) => {
+    e.preventDefault();
+    
+    dispatch(loginAdmin({email, password, role : 'Admin'}));
+  }
+
+  const handleStafflogin = (e) => {
+    e.preventDefault();
+    
+    dispatch(staffLogin({email, password, role : 'Staff'}));
+  }
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      toast.error(error);
+      dispatch(clearAllUserErrors());
+    }
+    if (isAuthenticated) {
+      toast.success("Login successfully");
+      navigateTo("/"); // Redirect to admin dashboard
+    }
+  }, [dispatch, error, loading, isAuthenticated, navigateTo]);
+
+
   return (
     <div className="flex flex-col lg:flex-row h-screen">
       {/* Left Section with Faded Background Image */}
       <div
         className="w-full lg:w-3/5 bg-teal-900 flex justify-center items-center relative"
         style={{
-          backgroundImage: "url('/background.jpg')", // Add your background image path here
+          backgroundImage: "url('/background.jpg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -28,20 +76,23 @@ const Login = () => {
           <input
             type="text"
             placeholder="Username"
+            value={email}
+            onChange={handleEmailChange}
             className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500"
           />
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={handlePassChange}
             className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500"
           />
 
-          {/* Buttons for Admin and Staff Login */}
           <div className="flex justify-between gap-4">
-            <button className="w-1/2 bg-teal-600 hover:bg-teal-500 text-white font-semibold py-3 rounded-lg transition">
+            <button onClick={handleAdminlogin} className="w-1/2 bg-teal-600 hover:bg-teal-500 text-white font-semibold py-3 rounded-lg transition">
               Admin Login
             </button>
-            <button className="w-1/2 bg-orange-600 hover:bg-orange-500 text-white font-semibold py-3 rounded-lg transition">
+            <button onClick={handleStafflogin} className="w-1/2 bg-orange-600 hover:bg-orange-500 text-white font-semibold py-3 rounded-lg transition">
               Staff Login
             </button>
           </div>
