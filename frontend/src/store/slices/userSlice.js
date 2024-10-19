@@ -11,6 +11,7 @@ const userSlice = createSlice({
     user: {},
     error: null,
     message: null,
+    otpSent: null,
   },
   reducers: {
     registerRequest(state, action) {
@@ -102,6 +103,21 @@ const userSlice = createSlice({
       state.user = state.user;
     },
 
+    passwordResetTokenRequest(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    passwordResetTokenSuccess(state, action) {
+      state.loading = false;
+      state.message = action.payload.message;
+      state.error = null;
+      state.otpSent = action.payload.otp;
+    },
+    passwordResetTokenFailed(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+      state.message = null;
+    },
 
     passwordResetRequest(state) {
       state.loading = true;
@@ -117,7 +133,6 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.message = null;
     },
-
   },
 });
 
@@ -210,14 +225,10 @@ export const updatePassword = (data) => async (dispatch) => {
   }
 };
 
-
-
-
-
 export const getPasswordResetToken = (email) => async (dispatch) => {
   const toastId = toast.loading("Sending reset email...");
 
-  dispatch(userSlice.actions.passwordResetRequest());
+  dispatch(userSlice.actions.passwordResetTokenRequest());
 
   try {
     const response = await axios.post(
@@ -227,18 +238,40 @@ export const getPasswordResetToken = (email) => async (dispatch) => {
     );
 
     // Handle successful response
-    dispatch(userSlice.actions.passwordResetSuccess(response.data));
+    dispatch(userSlice.actions.passwordResetTokenSuccess(response.data));
     toast.success("Reset email sent");
   }
    catch (error) {
-    dispatch(userSlice.actions.passwordResetFailed(error.response?.data?.message || "Failed to send reset email"));
+    dispatch(userSlice.actions.passwordResetTokenFailed(error.response?.data?.message || "Failed to send reset email"));
     toast.error(error.response?.data?.message || "Failed to send reset email");
   } finally {
     toast.dismiss(toastId);
   }
 };
 
+export const resetPassword = (data) => async (dispatch) => {
+  const toastId = toast.loading("Reset in Progress...");
 
+  dispatch(userSlice.actions.passwordResetRequest());
+
+  try {
+    const response = await axios.put(
+      "http://localhost:4000/user/resetPass",
+      data,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    // Handle successful response
+    dispatch(userSlice.actions.passwordResetSuccess(response.data));
+    toast.success('Password changed Successfully');
+  }
+   catch (error) {
+    dispatch(userSlice.actions.passwordResetFailed(error.response?.data?.message || "Failed to send reset email"));
+    toast.error(error.response?.data?.message || "Failed to reset the password");
+  } finally {
+    toast.dismiss(toastId);
+  }
+};
 
 export const ResetPassword = (otp,password) => async (dispatch) => {
   const toastId = toast.loading("Sending reset email...");

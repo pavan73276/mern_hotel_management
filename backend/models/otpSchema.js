@@ -23,16 +23,16 @@ const OTPSchema = new mongoose.Schema({
 
 // Define a post-save hook to send email after the document has been saved
 OTPSchema.pre("save", async function (next) {
-	console.log("New document saved to database");
 
 	// Only send an email when a new document is created
 	if (this.isNew) {
 		try {
 			const subject = `Otp Alert for Password Change`;
-      const message = `your otp is ${this.otp}`;
-      const response = mailSender(this.email, subject, message);
+      const message = `your otp is for ${this.otp}`;
+      
+			mailSender(this.email, subject, message);
 
-			console.log("Email sent successfully: ", response);
+			console.log("Email sent successfully: ");
 		} catch (error) {
 			console.log("Error occurred while sending email: ", error);
 			throw error;

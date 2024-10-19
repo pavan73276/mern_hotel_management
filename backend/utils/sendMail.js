@@ -11,9 +11,9 @@ export const mailSender = catchAsyncErrors(async (email, subject, message) => {
       user: process.env.SMTP_MAIL,
       pass: process.env.SMTP_PASSWORD,
     },
-    secure: true,
-    debug: true,
-    logger: true,
+    // secure: true,
+    // debug: true,
+    // logger: true,
   });
 
   const options = {
@@ -23,6 +23,6 @@ export const mailSender = catchAsyncErrors(async (email, subject, message) => {
     text: message,
   };
     
-  return await transporter.sendMail(options);
+  await transporter.sendMail(options);
 });
 
