@@ -2,9 +2,7 @@ import express from "express";
 import {
   login,
   userRegister,
-  
   sendotp,
-
   addNewAdmin,
   addNewStaff,
   getAllStaffs,
@@ -12,7 +10,8 @@ import {
   logoutUser,
   logoutAdmin,
   logoutStaff,
-  updatePassword
+  updatePassword,
+  resetPassword
 } from "../controller/userController.js";
 import {
   isAdminAuthenticated,
@@ -39,6 +38,7 @@ router.get("/user/logout", isUserAuthenticated, logoutUser);
 router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
 router.get("/staff/logout", isStaffAuthenticated, logoutStaff);
 router.put("/update/password", isUserAuthenticated, updatePassword);
+router.put("/resetPass", resetPassword);
 
 
 export default router;

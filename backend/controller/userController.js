@@ -3,7 +3,7 @@ import { User } from "../models/userSchema.js";
 import ErrorHandler from "../middlewares/error.js";
 import { generateToken } from "../utils/jwtToken.js";
 import otpGenerator  from "otp-generator";
-import {OTP} from  "../models/OTP.js";
+import {OTP} from  "../models/otpSchema.js";
 
 export const userRegister = catchAsyncErrors(async (req, res, next) => {
   const { firstName, lastName, email, phone, dob, gender, password } =
@@ -228,8 +228,23 @@ export const updatePassword = catchAsyncErrors(async(req, res, next) => {
   sendToken(user, 200, res, "Password updated successfully");
 });
 
+export const resetPassword = catchAsyncErrors(async(req, res, next) => {
+  const {email, newPassword} = req.body;
 
+  const user = await User.findOne({email, role: 'User'});
 
+  if(!user){
+    return next(new ErrorHandler("user with given email doest not exist", 400));
+  }
+
+  user.password = newPassword;
+  await user.save();
+  
+  res.status(200).json({
+    success: true,
+    message: 'Password Change successfully',
+  })
+});
 
 
 export const sendotp = catchAsyncErrors(async (req, res, next) =>  {
