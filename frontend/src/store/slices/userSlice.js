@@ -159,7 +159,7 @@ export const getUser = () => async (dispatch) => {
     dispatch(userSlice.actions.fetchUserSuccess(response.data.user));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
-    // dispatch(userSlice.actions.fetchUserFailed(error.response.data.message));
+    dispatch(userSlice.actions.fetchUserFailed(error.response.data.message));
   }
 };
 
@@ -205,6 +205,33 @@ export const getPasswordResetToken = (email) => async (dispatch) => {
     toast.dismiss(toastId);
   }
 };
+
+
+
+export const ResetPassword = (otp,password) => async (dispatch) => {
+  const toastId = toast.loading("Sending reset email...");
+
+  dispatch(userSlice.actions.passwordResetRequest());
+
+  try {
+    const response = await axios.post(
+      "http://localhost:4000/user/resetPassword",
+      { otp,password },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    // Handle successful response
+    dispatch(userSlice.actions.passwordResetSuccess(response.data));
+    toast.success("Password updated");
+  }
+   catch (error) {
+    dispatch(userSlice.actions.passwordResetFailed(error.response?.data?.message || "Failed to update password"));
+    toast.error(error.response?.data?.message || "Failed to update password");
+  } finally {
+    toast.dismiss(toastId);
+  }
+};
+
 
 
 

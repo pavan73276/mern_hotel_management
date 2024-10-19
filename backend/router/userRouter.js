@@ -4,6 +4,7 @@ import {
   userRegister,
   
   sendotp,
+  resetPassword,
 
   addNewAdmin,
   addNewStaff,
@@ -26,6 +27,7 @@ router.post("/register", userRegister);
 router.post("/login", login);
 
 router.post("/sendotp", sendotp);
+router.post("/resetPassword", resetPassword);
 
 
 router.post("/admin/addnew", isAdminAuthenticated, addNewAdmin);
