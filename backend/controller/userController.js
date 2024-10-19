@@ -213,6 +213,24 @@ export const logoutUser = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+export const updatePassword = catchAsyncErrors(async(req, res, next) => {
+  const {currentPassword, newPassword} = req.body;
+
+  const user = await User.findById(req.user.id).select("+password");
+
+  const isPasswordMatched = await user.comparePassword(currentPassword);
+  
+  if(!isPasswordMatched){
+    return next(new ErrorHandler("Old password is incorrect", 400));
+  }
+
+  user.password = req.body.newPassword;
+  await user.save();
+  
+  sendToken(user, 200, res, "Password updated successfully");
+});
+
+
 
 
 
@@ -220,27 +238,27 @@ export const sendotp = catchAsyncErrors(async (req, res, next) =>  {
   
     const { email } = req.body
 
-
     var otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
       specialChars: false,
     })
 
-    const result = await OTP.findOne({ otp: otp })
-    console.log("Result is Generate OTP Func")
+    let result = await OTP.findOne({ otp: otp })
+    //console.log("Result is Generate OTP Func")
     console.log("OTP", otp)
-    console.log("Result", result)
+    //console.log("Result", result)
     while (result) {
       otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
       })
+     result = await OTP.findOne({ otp: otp })
     }
 
 
     const otpPayload = { email, otp }
     const otpBody = await OTP.create(otpPayload)
-    console.log("OTP Body", otpBody)
+    
     res.status(200).json({
       success: true,
       message: `OTP Sent Successfully`,

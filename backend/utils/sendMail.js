@@ -1,27 +1,28 @@
-import nodemailer from 'nodemailer';
+import nodeMailer from 'nodemailer';
+import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
+import ErrorHandler from "../middlewares/error.js";
 
-export const mailSender = async (email, title, body) => {
-  try {
-    let transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-      secure: false,
-    })
+export const mailSender = catchAsyncErrors(async (email, subject, message) => {
+  const transporter = nodeMailer.createTransport({
+    host: process.env.SMTP_HOST,
+    service: process.env.SMTP_SERVICE,
+    port: process.env.SMTP_PORT,
+    auth: {
+      user: process.env.SMTP_MAIL,
+      pass: process.env.SMTP_PASSWORD,
+    },
+    secure: true,
+    debug: true,
+    logger: true,
+  });
 
-    let info = await transporter.sendMail({
-      from: `"Hotel Management Portal" <${process.env.MAIL_USER}>`, // sender address
-      to: `${email}`, // list of receivers
-      subject: `${title}`, // Subject line
-      html: `${body}`, // html body
-    })
-    console.log(info.response)
-    return info
-  } catch (error) {
-    console.log(error.message)
-    return error.message
-  }
-}
+  const options = {
+    from: process.env.SMTP_MAIL,
+    to: email,
+    subject,
+    text: message,
+  };
+    
+  return await transporter.sendMail(options);
+});
 

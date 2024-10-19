@@ -10,7 +10,6 @@ const userSlice = createSlice({
     isAuthenticated: false,
     user: {},
     error: null,
-    emailSent: false,
     message: null,
   },
   reducers: {
@@ -84,6 +83,20 @@ const userSlice = createSlice({
       state.user = state.user;
       state.error = action.payload;
     },
+    updatePasswordRequest(state, action) {
+      state.loading = true;
+    },
+    updatePasswordSuccess(state, action) {
+      state.error = null;
+      state.loading = false;
+      state.isUpdated = true;
+      state.user = action.payload.user;
+    },
+    updatePasswordFailed(state, action) {
+      state.error = action.payload;
+      state.loading = false;
+      state.isUpdated = false;
+    },
     clearAllErrors(state, action) {
       state.error = null;
       state.user = state.user;
@@ -93,17 +106,14 @@ const userSlice = createSlice({
     passwordResetRequest(state) {
       state.loading = true;
       state.error = null;
-      state.emailSent = false;
     },
     passwordResetSuccess(state, action) {
       state.loading = false;
-      state.emailSent = true;
       state.message = action.payload.message;
       state.error = null;
     },
     passwordResetFailed(state, action) {
       state.loading = false;
-      state.emailSent = false;
       state.error = action.payload;
       state.message = null;
     },
@@ -178,6 +188,28 @@ export const logout = () => async (dispatch) => {
     dispatch(userSlice.actions.logoutFailed(error.response.data.message));
   }
 };
+
+export const updatePassword = (data) => async (dispatch) => {
+  dispatch(userSlice.actions.updatePasswordRequest());
+  try {
+    const response = await axios.put(
+      "http://localhost:4000/user/update/password",
+      data,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    dispatch(userSlice.actions.updatePasswordSuccess());
+  } catch (error) {
+    dispatch(
+      userSlice.actions.updatePasswordFailed(
+        error.response.data.message || "Failed to update password."
+      )
+    );
+  }
+};
+
 
 
 
