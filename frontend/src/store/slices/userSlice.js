@@ -10,7 +10,6 @@ const userSlice = createSlice({
     isAuthenticated: false,
     user: {},
     error: null,
-    emailSent: false,
     message: null,
   },
   reducers: {
@@ -107,17 +106,14 @@ const userSlice = createSlice({
     passwordResetRequest(state) {
       state.loading = true;
       state.error = null;
-      state.emailSent = false;
     },
     passwordResetSuccess(state, action) {
       state.loading = false;
-      state.emailSent = true;
       state.message = action.payload.message;
       state.error = null;
     },
     passwordResetFailed(state, action) {
       state.loading = false;
-      state.emailSent = false;
       state.error = action.payload;
       state.message = null;
     },
@@ -173,7 +169,7 @@ export const getUser = () => async (dispatch) => {
     dispatch(userSlice.actions.fetchUserSuccess(response.data.user));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
-    // dispatch(userSlice.actions.fetchUserFailed(error.response.data.message));
+    dispatch(userSlice.actions.fetchUserFailed(error.response.data.message));
   }
 };
 
