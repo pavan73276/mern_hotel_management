@@ -12,7 +12,7 @@ import {
   logoutAdmin,
   logoutStaff,
   updatePassword,
-  resetPassword
+
 } from "../controller/userController.js";
 import {
   isAdminAuthenticated,
@@ -27,8 +27,6 @@ router.post("/register", userRegister);
 router.post("/login", login);
 
 router.post("/sendotp", sendotp);
-router.post("/resetPassword", resetPassword);
-
 
 router.post("/admin/addnew", isAdminAuthenticated, addNewAdmin);
 router.post("/staff/addnew", isAdminAuthenticated, addNewStaff);

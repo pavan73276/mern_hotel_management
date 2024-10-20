@@ -29,7 +29,7 @@ function App() {
 
             <Route path="addnewadmin" element={<AdminForm/>} />
             <Route path="addnewstaff" element={<AdminForm/>} />
-            <Route path="addroom" element={<AdminForm/>} />
+            <Route path="addroom" element={<RoomForm/>} />
             <Route path="deleteroom" element={<AdminForm/>} />
             <Route path="getallrooms" element={<AdminForm/>} />
             <Route path="getallbookings" element={<AdminForm/>} />

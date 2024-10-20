@@ -25,7 +25,7 @@ const AdminForm = () => {
     };
 
     return (
-        <div className="p-8 bg-white shadow-md rounded-lg h-full"> {/* Adjusted for height */}
+        <div className="p-8 bg-white shadow-md rounded-lg h-full">
             <h2 className="text-2xl font-bold text-center mb-6">Admin Registration</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* First Name */}
@@ -128,13 +128,19 @@ const AdminForm = () => {
                     />
                 </div>
 
-                {/* Centered Register Button */}
-                <div className="flex justify-center mt-2">
+                {/* Button Section */}
+                <div className="flex justify-between mt-4">
                     <button
                         type="submit"
-                        className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-700" // Adjusted button size
+                        className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
                     >
-                        Register
+                        Register New Admin
+                    </button>
+                    <button
+                        type="button" // This can be linked to another action or form
+                        className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+                    >
+                        Register New Staff
                     </button>
                 </div>
             </form>
