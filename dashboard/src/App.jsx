@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { ToastContainer} from 'react-toastify';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import DashboardLogin from "./pages/DashboardLogin";
+
 import Login from "./pages/Login";
 import Sidebar from './pages/Sidebar';
 import AdminForm from './pages/AddNewAdmin';
