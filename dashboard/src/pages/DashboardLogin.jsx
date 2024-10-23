@@ -44,7 +44,7 @@ const Login = () => {
     }
     if (isAuthenticated) {
       toast.success("Login successfully");
-      navigateTo("/"); // Redirect to admin dashboard
+      navigateTo("/sidebar"); // Redirect to admin dashboard
     }
   }, [dispatch, error, loading, isAuthenticated, navigateTo]);
 
