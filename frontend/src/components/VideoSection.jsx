@@ -8,7 +8,7 @@ const VideoSection = () => {
         autoPlay
         loop
         muted
-        src="src/assets/video/hotel_video.mp4" // Replace with your video path
+        src="https://assets-cug1-825v2.tajhotels.com/video/TAJ%20UMAID%20BHAWAN%202%20min_with%20Living%20Legacies_Endslate_210924%20cropped.mp4?Impolicy=Medium_High" // Replace with your video path
         type="video/mp4"
       />
       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">

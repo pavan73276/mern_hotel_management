@@ -1,4 +1,5 @@
 import moment from "moment";
+import { User } from "../models/userSchema.js";
 import { Room } from "../models/roomSchema.js";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { Booking } from "../models/bookingSchema.js";
@@ -74,14 +75,54 @@ export const bookRooms = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getAllBookings = catchAsyncErrors(async (req, res, next) => {
+  // Fetch all bookings and old bookings
   const allBookings = await Booking.find();
+  const allOldBookings = await oldBooking.find();
 
-  res.status(201).json({
+  // Extract user IDs and room IDs from all bookings
+  const userIds = [...new Set(allBookings.map(booking => booking.userid).concat(allOldBookings.map(booking => booking.userid)))];
+  const roomIds = [...new Set(allBookings.map(booking => booking.roomid).concat(allOldBookings.map(booking => booking.roomid)))];
+
+  // Fetch users and rooms based on the IDs
+  const users = await User.find({ _id: { $in: userIds } });
+  const rooms = await Room.find({ _id: { $in: roomIds } });
+
+  // Create a map for easy lookup of user details and room details
+  const userMap = {};
+  users.forEach(user => {
+    userMap[user._id] = {
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      gender: user.gender
+    };
+  });
+
+  const roomMap = {};
+  rooms.forEach(room => {
+    roomMap[room._id] = {
+      roomId: room._id,
+      roomNo: room.roomNo,
+      roomType: room.type
+    };
+  });
+
+  // Combine bookings with user and room details
+  const combinedBookings = [...allBookings, ...allOldBookings].map(booking => ({
+    ...booking._doc, // Spread the booking details
+    user: userMap[booking.userid] || null, // Add user details
+    room: roomMap[booking.roomid] || null  // Add room details
+  }));
+
+  res.status(200).json({
     success: true,
     message: "All Bookings!",
-    bookings: allBookings,
+    bookings: combinedBookings,
   });
 });
+
 
 export const getMyCurrentBookings = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.user; // Assuming the userId is passed in the request body

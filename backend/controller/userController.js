@@ -36,12 +36,7 @@ export const userRegister = catchAsyncErrors(async (req, res, next) => {
     role: "User",
   });
 
-  res.status(200)
-    .json({
-      success: true,
-      message: "User Registered!",
-      user
-    });
+  generateToken(user, "Registered Successfully!", 201, res);
 });
 
 export const login = catchAsyncErrors(async (req, res, next) => {

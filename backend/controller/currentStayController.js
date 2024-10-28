@@ -64,6 +64,21 @@ export const checkIn = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+export const allStays = catchAsyncErrors(async (req, res, next) => {
+
+  const stays = await currentStay.find();
+
+  if (!stays) {
+    throw new Error("No Stays found", 400);
+  }
+
+  res.status(201).json({
+    success: true,
+    message: "Success!",
+    stays,
+  });
+});
+
 export const filter = catchAsyncErrors(async (req, res, next) => {
 
   const { food, swimming, gym } = req.body;
@@ -76,7 +91,7 @@ export const filter = catchAsyncErrors(async (req, res, next) => {
       message: "No current stays found"
     });
   }
-  console.log(bookingIds);
+  
   let query = {};
   let conditions = [];
   
@@ -104,6 +119,7 @@ export const filter = catchAsyncErrors(async (req, res, next) => {
       message: "No stays found matching the criteria"
     });
   }
+
   res.status(201).json({
     success: true,
     message: "Stays found success",

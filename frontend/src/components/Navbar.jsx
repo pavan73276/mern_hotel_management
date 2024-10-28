@@ -45,7 +45,7 @@ const Navbar = () => {
             {/* Logo Section */}
             <div className="logo">
               <Link to={"/"}>
-                <img src="/logo.png" alt="logo" className="w-24" />
+                <img src="src/assets/logo.png" alt="logo" className="w-24" />
               </Link>
             </div>
 

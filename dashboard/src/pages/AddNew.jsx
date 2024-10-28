@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaUser, FaEnvelope, FaPhone, FaCalendarAlt, FaVenusMars, FaLock } from 'react-icons/fa';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewAdmin, addNewStaff } from '../store/slices/adminSlice';
+import {Link, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const AdminForm = () => {
+const AddNewForm = () => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -29,7 +30,9 @@ const AdminForm = () => {
     };
 
     const dispatch = useDispatch();
-   
+    const navigateTo = useNavigate();
+    const { loading, error } = useSelector((state) => state.admin);
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -46,15 +49,7 @@ const AdminForm = () => {
     const handleAddNewAdmin = (e) => {
         e.preventDefault();
         if (isFormValid()) {
-            console.log("Adding new admin:", formData);
-            dispatch(addNewAdmin(formData)).then(() => {
-                toast.success("New admin added successfully!");
-                resetForm();
-            }).catch(() => {
-                toast.error("Failed to add new admin.");
-            });
-        } else {
-            toast.error("Please fill out all fields!");
+            dispatch(addNewAdmin(formData));
         }
     };
 
@@ -62,18 +57,18 @@ const AdminForm = () => {
     const handleAddNewStaff = (e) => {
         e.preventDefault();
         if (isFormValid()) {
-            console.log("Adding new staff:", formData);
-            dispatch(addNewStaff(formData)).then(() => {
-                toast.success("New staff added successfully!");
-                resetForm();
-            }).catch(() => {
-                toast.error("Failed to add new staff.");
-            });
-        } else {
-            toast.error("Please fill out all fields!");
+            dispatch(addNewStaff(formData));
         }
     };
 
+    useEffect(() => {
+        if(error) {
+            toast.error(error);
+        }
+        if(loading){
+            toast.loading();
+        }
+    }, [error, loading])
       
     return (
         <div className="p-8 bg-white shadow-md rounded-lg h-full">
@@ -159,9 +154,9 @@ const AdminForm = () => {
                         required
                     >
                         <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
 
@@ -201,4 +196,4 @@ const AdminForm = () => {
     );
 };
 
-export default AdminForm;
+export default AddNewForm;

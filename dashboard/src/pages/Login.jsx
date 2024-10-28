@@ -3,15 +3,14 @@ import { useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { clearAllStaffErrors, staffLogin } from "../store/slices/staffSlice.js"; 
+import { clearAllUserErrors, login } from "../store/slices/userSlice.js"; 
 import { toast } from "react-toastify";
-import { loginAdmin } from '../store/slices/adminSlice.js';
 
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loading, isAuthenticated, error } = useSelector((state) => state.admin); // Use admin slice here
+  const { loading, isAuthenticated, error } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
@@ -27,25 +26,30 @@ const Login = () => {
   const handleAdminlogin = (e) => {
     e.preventDefault();
     
-    dispatch(loginAdmin({email, password, role : 'Admin'}));
+    dispatch(login({email, password, role : 'Admin'}));
   }
 
   const handleStafflogin = (e) => {
     e.preventDefault();
     
-    dispatch(staffLogin({email, password, role : 'Staff'}));
+    dispatch(login({email, password, role : 'Staff'}));
   }
 
   useEffect(() => {
     if (error) {
-      console.log(error);
       toast.error(error);
-      dispatch(clearAllStaffErrors());
+      dispatch(clearAllUserErrors());
     }
-    if (isAuthenticated) {
-      toast.success("Login successfully");
-      navigateTo("/"); // Redirect to admin dashboard
+
+    if (isAuthenticated === 'staff') {
+      toast.success("Staff Login successfully");
+      navigateTo("/staff");
     }
+    if (isAuthenticated === 'admin') {
+      toast.success("Admin Login successfully");
+      navigateTo("/admin");
+    }
+
   }, [dispatch, error, loading, isAuthenticated, navigateTo]);
 
 
@@ -61,9 +65,9 @@ const Login = () => {
         }}
       >
         <div className="absolute inset-0 bg-teal-900 opacity-80"></div> {/* Overlay for fading */}
-        <div className="relative z-10 text-center text-white">
-          <img src="/logo.png" alt="Bailey and Co." className="w-24 mx-auto mb-4" />
-          <h1 className="text-6xl font-semibold">Bailey and Co.</h1>
+        <div className="relative text-center text-white">
+          <img src="src/assets/logo.png" alt="Bailey and Co." className="w-24 mx-auto mb-4" />
+          <h1 className="text-6xl font-semibold">Palace Regalia</h1>
         </div>
       </div>
 

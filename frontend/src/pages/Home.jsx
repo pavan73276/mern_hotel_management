@@ -49,8 +49,7 @@ const HomePage = () => {
       <Testimonials />
       <ImageSlider slides={slides} interval={4000} />
       <Features />
-      <Reviews />
-      <Footer />
+      {/* <Reviews /> */}
     </div>
   );
 };

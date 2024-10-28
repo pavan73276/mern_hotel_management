@@ -9,13 +9,13 @@ const features = [
     id: 1,
     title: "Free Wi-Fi",
     description: "Stay connected throughout your stay.",
-    image: "/path/to/your/image1.jpg", // Replace with actual image paths
+    image: "src/assets/wifi.jpeg", // Replace with actual image paths
   },
   {
     id: 2,
     title: "Pool",
     description: "Enjoy our outdoor swimming pool.",
-    image: "/path/to/your/image2.jpg",
+    image: "src/assets/autoslider/h1.jpeg",
   },
   // Add more features if needed
 ];

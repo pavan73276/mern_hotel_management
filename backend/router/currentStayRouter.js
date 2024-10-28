@@ -1,5 +1,5 @@
 import express from "express";
-import {checkIn, checkOut, filter
+import {allStays, checkIn, checkOut, filter
 } from "../controller/currentStayController.js";
 import {isStaffAuthenticated} from "../middlewares/auth.js";
 
@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post("/checkIn", isStaffAuthenticated, checkIn);
 router.post("/checkOut", isStaffAuthenticated, checkOut);
-router.get("/filter", isStaffAuthenticated, filter);
+router.post("/filter", isStaffAuthenticated, filter);
+router.get("/allstays", isStaffAuthenticated, allStays);
 
 export default router;

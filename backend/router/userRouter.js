@@ -11,14 +11,13 @@ import {
   logoutAdmin,
   logoutStaff,
   updatePassword,
-
+  resetPassword
 } from "../controller/userController.js";
 import {
   isAdminAuthenticated,
   isUserAuthenticated,
   isStaffAuthenticated,
 } from "../middlewares/auth.js";
-
 
 const router = express.Router();
 
@@ -27,7 +26,7 @@ router.post("/sendotp", sendotp);
 router.post("/login", login);
 router.post("/admin/addnew", isAdminAuthenticated, addNewAdmin);
 router.post("/staff/addnew", isAdminAuthenticated, addNewStaff);
-router.get("/staff", getAllStaffs);
+router.get("/staff", isAdminAuthenticated, getAllStaffs);
 router.get("/user/me", isUserAuthenticated, getUserDetails);
 router.get("/admin/me", isAdminAuthenticated, getUserDetails);
 router.get("/staff/me", isStaffAuthenticated, getUserDetails);
@@ -36,6 +35,5 @@ router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
 router.get("/staff/logout", isStaffAuthenticated, logoutStaff);
 router.put("/update/password", isUserAuthenticated, updatePassword);
 router.put("/resetPass", resetPassword);
-
 
 export default router;
