@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +19,7 @@ import Profile from "./pages/Profile"
 import MyAllBookings from "./pages/MyAllBookings";
 import CurrentBooking from "./pages/CurrentBooking";
 import ForgotPassword from "./pages/ForgotPassword";
+import Payment from "./pages/Payment";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -59,9 +61,10 @@ const App = () => {
 
 
           <Route path="/forgotPassword" element={<ForgotPassword/>} />
+          <Route path="/payment" element={<Payment/>} />
  
         </Routes>
-        {/* <Footer /> */}
+        <Footer />
         <ToastContainer position="top-center" theme="dark" />
       </Router>
     </div>

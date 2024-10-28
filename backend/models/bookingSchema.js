@@ -22,6 +22,20 @@ const bookingSchema = new mongoose.Schema({
   bookingDates: {
     type: [String],
     default: []
+  },
+  paymentDetails : {
+    paymentId : {
+      type : String,
+      required: true
+    },
+    paymentAmount : {
+      type : Number,
+      required: true
+    },
+    paymentDate: {
+      type : Date,
+      default: Date.now
+    }
   }
 });
 

@@ -5,11 +5,12 @@ import { Booking } from "../models/bookingSchema.js";
 import { oldBooking } from "../models/oldBookingSchema.js";
 import ErrorHandler from "../middlewares/error.js";
 import mongoose from "mongoose";
+import stripe from "../stripe/stripeInstance.js"
 
 export const bookRooms = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.user;
 
-  const { dates, roomType, addOns } = req.body;
+  const { dates, roomType, addOns, paymentIntentId, totalPrice, email } = req.body;
 
   if (!dates || !Array.isArray(dates) || dates.length === 0) {
     return next(
@@ -57,6 +58,10 @@ export const bookRooms = catchAsyncErrors(async (req, res, next) => {
     roomid,
     addOns,
     bookingDates: dates,
+    paymentDetails : {
+      paymentId : paymentIntentId,
+      paymentAmount : totalPrice
+    }
   });
 
   Room.updateAvailabilityBooked(indices, roomid);
@@ -173,4 +178,19 @@ export const getMyBookings = catchAsyncErrors(async (req, res, next) => {
     success: true,
     bookings: bookings,
   });
+});
+
+export const payment = catchAsyncErrors(async (req, res, next) => {
+  
+  const { totalPrice } = req.body;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: totalPrice*100, // Amount in smallest currency unit (e.g., cents for USD)
+    currency: "usd",
+  });
+  
+  res.status(200).json({
+    success: true,
+    clientSecret: paymentIntent.client_secret,
+  })
+
 });

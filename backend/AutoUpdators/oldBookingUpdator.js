@@ -31,7 +31,6 @@ export const updateOldBooking = () => {
         }
       }
 
-
       console.log("Room availability updated successfully.");
     } catch (error) {
       console.error("Error in autoUpdator updating room availability:", error);

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Calendar = ({ onDatesSelected }) => {
   const availability = [
-    1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1,
-    1, 1, 1, 1, 1, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1,
   ];
 
   const [selectedDates, setSelectedDates] = useState([]);
@@ -38,9 +38,13 @@ const Calendar = ({ onDatesSelected }) => {
   };
 
   const handleFindRoomClick = () => {
-    const dates = selectedDates.map((date) =>
-      new Date(date).toISOString().split("T")[0]
-    );
+    
+    const dates = selectedDates.map((date) => {
+      const localDate = new Date(date);
+      return new Date(Date.UTC(localDate.getFullYear(), localDate.getMonth(), localDate.getDate())).toISOString().split("T")[0];
+    });
+
+    
     setAvailabilityChecked(true);
     onDatesSelected(dates); // Pass dates to parent
   };
@@ -77,7 +81,6 @@ const Calendar = ({ onDatesSelected }) => {
         <button
           className="mt-8 bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600"
           onClick={handleFindRoomClick}
-          disabled={selectedDates.length === 0}
         >
           Find Room
         </button>

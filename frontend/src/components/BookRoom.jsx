@@ -7,17 +7,18 @@ const addonPrices = {
   gym: 10,
 };
 
-const BookRoom = ({ selectedRoom, selectedDates }) => {
+const BookRoom = ({ selectedRoom, selectedDates, onAddOnChange }) => {
   const [addons, setAddons] = useState({ food: false, swimming: false, gym: false });
   const { isAuthenticated } = useSelector((state) => state.user);
-
+  
   const handleAddonChange = (addon) => {
-    setAddons((prevAddons) => ({ ...prevAddons, [addon]: !prevAddons[addon] }));
+    const updatedAddons = {
+      ...addons,
+      [addon]: !addons[addon]
+    }
+    setAddons(updatedAddons);
+    onAddOnChange(updatedAddons);
   };
-
-  const totalAddonPrice = Object.keys(addons)
-    .filter((key) => addons[key])
-    .reduce((acc, key) => acc + addonPrices[key], 0);
 
   return (
     <div className="bg-white shadow-lg p-8 rounded-lg space-y-6 mt-20">
@@ -25,11 +26,16 @@ const BookRoom = ({ selectedRoom, selectedDates }) => {
 
       <div className="space-y-2">
         <h3 className="text-lg font-semibold text-gray-600">Selected Dates:</h3>
-        <ul className="list-disc list-inside text-gray-700">
+        <div className="flex flex-wrap gap-2">
           {selectedDates.map((date) => (
-            <li key={date}>{date}</li>
+            <div
+              key={date}
+              className="px-4 py-2 bg-blue-100 text-gray-800 rounded-lg shadow-md"
+            >
+              {date}
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
 
       <div className="space-y-4">

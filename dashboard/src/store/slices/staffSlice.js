@@ -59,7 +59,6 @@ export const staffLogin = (data) => async (dispatch) => {
     });
     dispatch(staffSlice.actions.staffSuccess(response.data));
   } catch (error) {
-    console.log(error);
     dispatch(staffSlice.actions.staffFailed(error.response.data.message));
   }
 };
@@ -111,8 +110,8 @@ export const filterDetails = (filterData) => async (dispatch) => {
   }
 };
 
-export const clearAllUserErrors = () => (dispatch) => {
-  dispatch(staffSlice.actions.clearAllUserErrors());
+export const clearAllStaffErrors = () => (dispatch) => {
+  dispatch(staffSlice.actions.clearStaffErrors());
 };
 
 export default staffSlice.reducer;

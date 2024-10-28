@@ -46,6 +46,7 @@ export const isStaffAuthenticated = catchAsyncErrors(
 export const isUserAuthenticated = catchAsyncErrors(
   async (req, res, next) => {
     const token = req.cookies.userToken;
+    
     if (!token) {
       return next(new ErrorHandler("User is not authenticated!", 400));
     }

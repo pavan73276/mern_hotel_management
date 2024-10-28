@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { clearAllUserErrors, staffLogin } from "../store/slices/staffSlice.js"; 
+import { clearAllStaffErrors, staffLogin } from "../store/slices/staffSlice.js"; 
 import { toast } from "react-toastify";
 import { loginAdmin } from '../store/slices/adminSlice.js';
 
@@ -40,7 +40,7 @@ const Login = () => {
     if (error) {
       console.log(error);
       toast.error(error);
-      dispatch(clearAllUserErrors());
+      dispatch(clearAllStaffErrors());
     }
     if (isAuthenticated) {
       toast.success("Login successfully");

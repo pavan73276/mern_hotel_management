@@ -3,7 +3,6 @@ import {
   login,
   userRegister,
   sendotp,
-  resetPassword,
   addNewAdmin,
   addNewStaff,
   getAllStaffs,
@@ -24,12 +23,8 @@ import {
 const router = express.Router();
 
 router.post("/register", userRegister);
-router.post("/login", login);
-
 router.post("/sendotp", sendotp);
-router.post("/resetPassword", resetPassword);
-
-
+router.post("/login", login);
 router.post("/admin/addnew", isAdminAuthenticated, addNewAdmin);
 router.post("/staff/addnew", isAdminAuthenticated, addNewStaff);
 router.get("/staff", getAllStaffs);
