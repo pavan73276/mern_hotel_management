@@ -38,7 +38,7 @@ const RoomForm = () => {
                 </div>
 
                 {/* Room Type */}
-                <div className="flex items-center border-b border-gray-300 py-2">
+                <div className="flex items-center border-b border-gray-300 py-2 mb-4"> {/* Added mb-4 here */}
                     <FaTag className="text-gray-500 mr-3" />
                     <select
                         name="roomType"
@@ -48,20 +48,24 @@ const RoomForm = () => {
                         required
                     >
                         <option value="">Select Room Type</option>
-                        <option value="single">Single</option>
-                        <option value="double">Double</option>
-                        <option value="suite">Suite</option>
-                        <option value="deluxe">Deluxe</option>
+                        <option value="Normal">Normal</option>
+                        <option value="VIP">VIP</option>
                     </select>
                 </div>
 
-                {/* Centered Register Button */}
-                <div className="flex justify-center mt-4">
+                {/* Button Section */}
+                <div className="flex justify-between mt-4">
                     <button
                         type="submit"
                         className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
                     >
-                        Register Room
+                        Add New Room
+                    </button>
+                    <button
+                        type="button" // Set to button type for separate action
+                        className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
+                    >
+                        Delete Room
                     </button>
                 </div>
             </form>

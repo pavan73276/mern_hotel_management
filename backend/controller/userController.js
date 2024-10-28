@@ -96,6 +96,9 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
     password,
     role: "Admin",
   });
+
+  console.log("new admin added");
+  
   res.status(200).json({
     success: true,
     message: "New Admin Registered",

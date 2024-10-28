@@ -11,7 +11,7 @@ import {
   logoutAdmin,
   logoutStaff,
   updatePassword,
-  resetPassword
+
 } from "../controller/userController.js";
 import {
   isAdminAuthenticated,
